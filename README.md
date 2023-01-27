@@ -17,3 +17,7 @@ To run the project, run the following command:
 ```bash
 uvicorn main:app --reload
 ```
+
+## Collaboration Notes for Developers
+
+To work on a new feature or a fix, ensure you're issuing a pull request to the dev branch. Your team will need to review your PR before it's is merged. You *WILL NOT* be able to push to the main branch. This is our deployment branch and will have an automation implemented later.
