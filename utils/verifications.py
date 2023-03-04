@@ -1,4 +1,4 @@
-from ._mongo_connection import get_collection
+from ._utils import get_collection
 
 def email_exists(email) -> bool:
     """!@brief Check if email exists in the database"""
