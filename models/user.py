@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from typing import Union
+from .session import NewSession
 
 class Login(BaseModel):
     email: str
     password: str
+    meta: NewSession
 
 class Faculty(BaseModel):
     department: str
