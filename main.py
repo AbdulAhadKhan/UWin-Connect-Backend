@@ -7,16 +7,18 @@ from models.user import Registration
 
 app = FastAPI()
 
+
 @app.get("/echo")
 async def echo(request: Request):
     """Echo the request body as JSON"""
     return await request.json()
 
+
 @app.post("/register", status_code=201, responses={201: {"description": "User created successfully"},
                                                    422: {"description": "Email already exists"}})
-async def register_user(user_info: Registration, response: Response):
+async def register(user_info: Registration, response: Response):
     """Register a new user"""
-    
+
     # Check if email already exists
     if email_exists(user_info.email):
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -40,4 +42,3 @@ async def edit_user_profile():
         collection.update_one(filter, update)
 
     return {"message": "User profile updated successfully"}
-    pass
