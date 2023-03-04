@@ -1,9 +1,9 @@
 from fastapi import Request, Response
 from fastapi import FastAPI, status
 
-from utils.verifications import email_exists
+from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user
-from models.user import Registration
+from models.user import Registration, Login
 
 app = FastAPI()
 
@@ -30,15 +30,25 @@ async def register(user_info: Registration, response: Response):
     return {"message": "User created successfully"}
 
 
+@app.get("/login", status_code=200, responses={200: {"description": "Login successful"},
+                                               401: {"description": "Invalid credentials"}})
+async def login(user: Login, response: Response):
+    if email_exists(user.email) and verify_password(user.email, user.password):
+        return {"message": "Login successful"}
+    response.status_code = status.HTTP_401_UNAUTHORIZED
+    return {"message": "Invalid credentials"}
+
+
 @app.put("/updateprofile", status_code=201)
 async def edit_user_profile():
-    record = user.dict()
-    email = record["email"]
+    # record = user.dict()
+    # email = record["email"]
 
-    filter = {"email": email}
-    update = {"$set": record}
-    with MongoClient() as client:
-        collection = client[DB][USER_COLLECTION]
-        collection.update_one(filter, update)
+    # filter = {"email": email}
+    # update = {"$set": record}
+    # with MongoClient() as client:
+    #     collection = client[DB][USER_COLLECTION]
+    #     collection.update_one(filter, update)
 
-    return {"message": "User profile updated successfully"}
+    # return {"message": "User profile updated successfully"}
+    pass
