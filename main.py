@@ -2,7 +2,7 @@ from fastapi import Request, Response
 from fastapi import FastAPI, status
 
 from utils.verifications import email_exists, verify_password
-from utils.insertions import insert_user
+from utils.insertions import insert_user, insert_session
 from models.user import Registration, Login
 
 app = FastAPI()
@@ -34,7 +34,8 @@ async def register(user_info: Registration, response: Response):
                                                401: {"description": "Invalid credentials"}})
 async def login(user: Login, response: Response):
     if email_exists(user.email) and verify_password(user.email, user.password):
-        return {"message": "Login successful"}
+        session_id = insert_session(user.email, user.meta)
+        return {"message": "Login successful", "session_id": session_id}
     response.status_code = status.HTTP_401_UNAUTHORIZED
     return {"message": "Invalid credentials"}
 
