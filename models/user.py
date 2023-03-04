@@ -1,8 +1,7 @@
 from pydantic import BaseModel
 from typing import Union
 
-class User(BaseModel):
-    userid: str
+class Login(BaseModel):
     email: str
     password: str
 
