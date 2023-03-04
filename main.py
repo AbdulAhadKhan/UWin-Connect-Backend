@@ -1,80 +1,35 @@
-from typing import Union
+from fastapi import Request, Response
+from fastapi import FastAPI, status
 
-from dotenv import dotenv_values
-from fastapi import Request
-from pydantic import BaseModel, validator
-from pydantic.fields import Optional, Field
-from pymongo import MongoClient
-from fastapi import FastAPI
-
-
-# config = dotenv_values(".env")
-
-
-DB = "QLeap"
-USER_COLLECTION = "users"
-
-
-class UserModel(BaseModel):
-    select: str
-    role: Optional[str]
-    course: Optional[str]
-    # username: str
-    firstname: str
-    lastname: str
-    email: str
-    password: str
-    gender: str
-    city: Optional[str]
-    state: Optional[str]
-    country: Optional[str]
-    description: Optional[str]
-
-
-    # @validator(email)
-    # def validate_email(cls, v):
-    #     if MongoClient()[DB][USER_COLLECTION].find_one({'email': v}):
-    #         raise ValueError('Email already exists')
-    #     # Check if email is unique
-    #     # You can use any database or ORM to check for duplicates
-    #     return v
-
+from utils.verifications import email_exists
+from utils.insertions import insert_user
+from models.user import Registration
 
 app = FastAPI()
 
-
 @app.get("/echo")
-async def get_item(request:Request):
+async def echo(request: Request):
+    """Echo the request body as JSON"""
     return await request.json()
 
-
-def verify_username_email(data, client):
-    # collection = client[DB][USER_COLLECTION]
-    # records = collection.find()
-    # print(records)
-    pass
-
-
-
-
-@app.post("/register", status_code=201)
-async def user_register(user: UserModel):
-
-    print("debug",user)
-    with MongoClient() as client:
-    # with MongoClient(config["ATLAS_URI"]) as client:
-        try:
-            verify_username_email(user.dict(), client)
-        except:
-            return {"status": "username or password already exists"}
-        collection = client[DB][USER_COLLECTION]
-        result = collection.insert_one(user.dict())
-        ack = result.acknowledged
-        return {"insertion": ack}
+@app.post("/register", status_code=201, responses={201: {"description": "User created successfully"},
+                                                   422: {"description": "Email already exists"}})
+async def register_user(user_info: Registration, response: Response):
+    """Register a new user"""
+    
+    # Check if email already exists
+    if email_exists(user_info.email):
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return {"message": "Email already exists"}
+    
+    # Insert user into database
+    insert_user(user_info)
+    response.status_code = status.HTTP_201_CREATED
+    return {"message": "User created successfully"}
 
 
 @app.put("/updateprofile", status_code=201)
-async def edit_user_profile(user: UserModel):
+async def edit_user_profile():
     record = user.dict()
     email = record["email"]
 
@@ -85,5 +40,4 @@ async def edit_user_profile(user: UserModel):
         collection.update_one(filter, update)
 
     return {"message": "User profile updated successfully"}
-    # else:
-    #     return {"message": f"User {email} not found"}
+    pass
