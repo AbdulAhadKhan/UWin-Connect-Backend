@@ -1,5 +1,6 @@
-from ._utils import get_collection, hash_password
-from ._utils import generate_session_id
+from utils.utils import get_collection, hash_password
+from utils.utils import generate_session_id
+
 
 def insert_user(user_info):
     """!@brief Insert a new user into the database"""

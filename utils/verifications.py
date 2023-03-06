@@ -1,4 +1,4 @@
-from ._utils import get_collection, compare_hashed_password
+from utils.utils import get_collection, compare_hashed_password
 
 def email_exists(email) -> bool:
     """!@brief Check if email exists in the database"""
