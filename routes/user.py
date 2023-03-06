@@ -7,7 +7,7 @@ from models.user import Registration, Login
 user_router = APIRouter()
 
 @user_router.post("/register", status_code=201, responses={201: {"description": "User created successfully"},
-                                                   422: {"description": "Email already exists"}})
+                                                           422: {"description": "Email already exists"}})
 async def register(user_info: Registration, response: Response):
     """Register a new user"""
 
@@ -23,7 +23,7 @@ async def register(user_info: Registration, response: Response):
 
 
 @user_router.get("/login", status_code=200, responses={200: {"description": "Login successful"},
-                                               401: {"description": "Invalid credentials"}})
+                                                       401: {"description": "Invalid credentials"}})
 async def login(user: Login, response: Response):
     if email_exists(user.email) and verify_password(user.email, user.password):
         session_id = insert_session(user.email, user.meta)
