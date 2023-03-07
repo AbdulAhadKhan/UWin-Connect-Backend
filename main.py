@@ -1,18 +1,21 @@
+import datetime
+
 from typing import Union
 
 from dotenv import dotenv_values
-from fastapi import Request
+from fastapi import Request, UploadFile, File
 from pydantic import BaseModel, validator
 from pydantic.fields import Optional, Field
 from pymongo import MongoClient
 from fastapi import FastAPI
 
 
-# config = dotenv_values(".env")
+config = dotenv_values(".env")
 
 
 DB = "QLeap"
 USER_COLLECTION = "users"
+POST_COLLECTION = "posts"
 
 
 class UserModel(BaseModel):
@@ -29,6 +32,15 @@ class UserModel(BaseModel):
     state: Optional[str]
     country: Optional[str]
     description: Optional[str]
+
+class PostsModel(BaseModel):
+    userid: str
+    title: str
+    description: str
+    timestamp: datetime.datetime
+    # image: UploadFile = File(...)
+    comments: Optional[list[tuple[str,datetime.datetime]]]
+
 
 
     # @validator(email)
@@ -87,3 +99,28 @@ async def edit_user_profile(user: UserModel):
     return {"message": "User profile updated successfully"}
     # else:
     #     return {"message": f"User {email} not found"}
+
+
+@app.post("/newspost", status_code=201)
+async def news_post(post: PostsModel):
+
+    print("debug",post)
+    with MongoClient() as client:
+
+        collection = client[DB][POST_COLLECTION]
+        print(str(post))
+        result = collection.insert_one(post.dict())
+        ack = result.acknowledged
+        return {"insertion": ack}
+
+
+@app.get("/fetchposts/{name}")
+async def fetch_posts(name:str):
+    with MongoClient() as client:
+        filter = {"userid": name}
+        collection = client[DB][POST_COLLECTION]
+        posts = collection.find(filter,{"userid": name})
+        posts = str(list(posts))
+    return posts
+
+
