@@ -7,14 +7,15 @@ class Login(BaseModel):
     password: str
     meta: NewSession
 
-class Faculty(BaseModel):
-    department: str
-    designation: str
+class Role(BaseModel):
+    title: str
+    department: Union[str, None] = None
+    designation: Union[str, None] = None
 
 class Registration(BaseModel):
     email: str
     password: str
     firstname: str
     lastname: str
-    role: Union[str, Faculty]
+    role: Role
     gender: str
