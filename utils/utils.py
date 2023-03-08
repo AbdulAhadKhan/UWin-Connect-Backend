@@ -1,4 +1,6 @@
 import yaml
+import certifi
+
 from argon2 import PasswordHasher, exceptions
 from hashlib import sha256
 from pymongo import MongoClient
@@ -7,7 +9,7 @@ CONFIGS = yaml.safe_load(open("utils/dev-config.yml"))
 
 def get_collection(collection_name: str) -> MongoClient:
     assert collection_name in CONFIGS['collections'], f'Collection "{collection_name}" not found'
-    client = MongoClient(CONFIGS['atlas_uri'])
+    client = MongoClient(CONFIGS['atlas_uri'], tlsCAFile=certifi.where())
     return client[CONFIGS['db']][CONFIGS['collections'][collection_name]]
 
 def hash_password(password: str) -> str:
