@@ -1,10 +1,13 @@
 from fastapi import Request
 from fastapi import FastAPI
 
+from routes.posts import post_router
 from routes.user import user_router
 
 app = FastAPI()
 app.include_router(user_router)
+app.include_router(post_router)
+
 
 @app.get("/echo")
 async def echo(request: Request):
