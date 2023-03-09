@@ -22,7 +22,7 @@ async def register(user_info: Registration, response: Response):
     return {"message": "User created successfully"}
 
 
-@user_router.get("/login", status_code=200, responses={200: {"description": "Login successful"},
+@user_router.post("/login", status_code=200, responses={200: {"description": "Login successful"},
                                                        401: {"description": "Invalid credentials"}})
 async def login(user: Login, response: Response):
     if email_exists(user.email) and verify_password(user.email, user.password):
