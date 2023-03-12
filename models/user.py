@@ -25,7 +25,9 @@ class Registration(UserMin):
     password: str
     gender: str
 
+# TODO: Remove role override
 @form
 class UserFull(UserMin):
+    role: Union[Role, None] = None
     description: Union[str, None] = None
     image: Union[UploadFile, None] = None
