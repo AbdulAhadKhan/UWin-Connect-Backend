@@ -12,10 +12,12 @@ class Role(BaseModel):
     department: Union[str, None] = None
     designation: Union[str, None] = None
 
-class Registration(BaseModel):
+class User(BaseModel):
     email: str
-    password: str
     firstname: str
     lastname: str
     role: Role
+
+class Registration(User):
+    password: str
     gender: str
