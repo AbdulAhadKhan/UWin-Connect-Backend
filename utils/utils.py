@@ -12,6 +12,10 @@ def get_collection(collection_name: str) -> MongoClient:
     client = MongoClient(CONFIGS['atlas_uri'], tlsCAFile=certifi.where())
     return client[CONFIGS['db']][CONFIGS['collections'][collection_name]]
 
+def clean_dict(dictionary: dict) -> dict:
+    """!@brief Remove all None values from a dictionary"""
+    return {k: v for k, v in dictionary.items() if v is not None}
+
 def hash_password(password: str) -> str:
     """!@brief Hash a password using Argon2."""
     password_hasher = PasswordHasher()
