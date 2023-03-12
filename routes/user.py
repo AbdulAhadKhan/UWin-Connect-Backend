@@ -1,13 +1,14 @@
-from fastapi import Response, status, APIRouter
+from fastapi import Response, status, APIRouter, Depends
 
 from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user, insert_session
-from models.user import Registration, Login
+from utils.updates import update_user
+from models.user import Registration, Login, UserFull
 
 user_router = APIRouter()
 
-@user_router.post("/register", status_code=201, responses={201: {"description": "User created successfully"},
-                                                           422: {"description": "Email already exists"}})
+@user_router.post("/register", status_code=201, responses={201: {"message": "User created successfully"},
+                                                           422: {"message": "Email already exists"}})
 async def register(user_info: Registration, response: Response):
     """Register a new user"""
 
@@ -21,9 +22,8 @@ async def register(user_info: Registration, response: Response):
     response.status_code = status.HTTP_201_CREATED
     return {"message": "User created successfully"}
 
-
-@user_router.post("/login", status_code=200, responses={200: {"description": "Login successful"},
-                                                       401: {"description": "Invalid credentials"}})
+@user_router.post("/login", status_code=200, responses={200: {"message": "Login successful"},
+                                                        401: {"message": "Invalid credentials"}})
 async def login(user: Login, response: Response):
     if email_exists(user.email) and verify_password(user.email, user.password):
         session_id = insert_session(user.email, user.meta)
@@ -31,3 +31,11 @@ async def login(user: Login, response: Response):
     response.status_code = status.HTTP_401_UNAUTHORIZED
     return {"message": "Invalid credentials"}
 
+@user_router.put("/update-user", status_code=200, responses={200: {"message": "User updated successfully"}})
+async def update(response: Response, user: UserFull = Depends(UserFull.as_form)):
+    try:
+        await update_user(user)
+        return {"message": "User updated successfully"}
+    except Exception as e:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return {"message": "User not updated"}
