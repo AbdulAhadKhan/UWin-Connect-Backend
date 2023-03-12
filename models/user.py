@@ -18,6 +18,6 @@ class UserMin(BaseModel):
     lastname: str
     role: Role
 
-class Registration(User):
+class Registration(UserMin):
     password: str
     gender: str
