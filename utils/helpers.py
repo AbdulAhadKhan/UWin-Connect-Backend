@@ -15,7 +15,7 @@ def form(cls: Type[BaseModel]):
     for _, field in cls.__fields__.items():
         parameters.append(inspect.Parameter(
             name=field.alias,
-            default=Form(...) if field.required else None,
+            default=Form(...) if field.required else Form(None),
             kind=inspect.Parameter.POSITIONAL_OR_KEYWORD,
             annotation=field.outer_type_))
 
