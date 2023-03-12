@@ -1,6 +1,9 @@
+from fastapi import UploadFile
 from pydantic import BaseModel
 from typing import Union
-from .session import NewSession
+
+from utils.helpers import form
+from models.session import NewSession
 
 class Login(BaseModel):
     email: str
@@ -21,3 +24,8 @@ class UserMin(BaseModel):
 class Registration(UserMin):
     password: str
     gender: str
+
+@form
+class UserFull(UserMin):
+    description: Union[str, None] = None
+    image: Union[UploadFile, None] = None
