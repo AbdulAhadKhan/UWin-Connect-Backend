@@ -13,8 +13,11 @@ def form(cls: Type[BaseModel]):
     parameters = []
 
     for _, field in cls.__fields__.items():
-        parameters.append(inspect.Parameter(default=Form(...) if field.required \
-                                            else None, annotation=field.outer_type_))
+        parameters.append(inspect.Parameter(
+            name=field.alias,
+            default=Form(...) if field.required else None,
+            kind=inspect.Parameter.POSITIONAL_OR_KEYWORD,
+            annotation=field.outer_type_))
 
     async def as_form(**data):
         return cls(**data)
