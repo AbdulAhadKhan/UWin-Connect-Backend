@@ -1,7 +1,3 @@
-'''
-The following code is taken from https://stackoverflow.com/questions/60127234/how-to-use-a-pydantic-model-with-form-data-in-fastapi
-All credit goes to the original author.
-'''
 
 import inspect
 from typing import Type
@@ -9,6 +5,10 @@ from typing import Type
 from fastapi import Form
 from pydantic import BaseModel
 
+'''
+The following code is taken from https://stackoverflow.com/questions/60127234/how-to-use-a-pydantic-model-with-form-data-in-fastapi
+All credit goes to the original author.
+'''
 def form(cls: Type[BaseModel]):
     parameters = []
 
