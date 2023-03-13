@@ -36,8 +36,7 @@ async def login(user: Login, response: Response):
 @user_router.put("/update-user", status_code=200, responses={200: {"message": "User updated successfully"}})
 async def update(response: Response, user: UserFull = Depends(UserFull.as_form)):
     try:
-        image_name = await store_file(user.image)
-        user.image = image_name
+        user.image = await store_file(user.image)
         await update_user(user)
         return {"message": "User updated successfully"}
     except Exception:
