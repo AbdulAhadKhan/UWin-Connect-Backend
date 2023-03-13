@@ -1,8 +1,10 @@
+from pathlib import Path
 from fastapi import Response, status, APIRouter, Depends
 
 from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user, insert_session
 from utils.updates import update_user
+from utils.utils import store_file
 from models.user import Registration, Login, UserFull
 
 user_router = APIRouter()
@@ -34,8 +36,11 @@ async def login(user: Login, response: Response):
 @user_router.put("/update-user", status_code=200, responses={200: {"message": "User updated successfully"}})
 async def update(response: Response, user: UserFull = Depends(UserFull.as_form)):
     try:
+        image_name = await store_file(user.image)
+        user.image = image_name
         await update_user(user)
         return {"message": "User updated successfully"}
-    except Exception as e:
+    except Exception:
+        Path(f".data/{user.image}").unlink(missing_ok=True)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"message": "User not updated"}
