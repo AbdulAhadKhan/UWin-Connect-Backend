@@ -1,6 +1,9 @@
+from fastapi import UploadFile
 from pydantic import BaseModel
 from typing import Union
-from .session import NewSession
+
+from utils.helpers import form
+from models.session import NewSession
 
 class Login(BaseModel):
     email: str
@@ -12,10 +15,19 @@ class Role(BaseModel):
     department: Union[str, None] = None
     designation: Union[str, None] = None
 
-class Registration(BaseModel):
+class UserMin(BaseModel):
     email: str
-    password: str
     firstname: str
     lastname: str
     role: Role
+
+class Registration(UserMin):
+    password: str
     gender: str
+
+# TODO: Remove role override
+@form
+class UserFull(UserMin):
+    role: Union[Role, None] = None
+    description: Union[str, None] = None
+    image: Union[UploadFile, None] = None
