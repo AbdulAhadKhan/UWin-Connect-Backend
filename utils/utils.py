@@ -41,6 +41,11 @@ def hash_file_name(file_name: str) -> str:
     """!@brief Hash a file name with time as a salt"""
     return sha256(f"{file_name}{time()}".encode('utf-8')).hexdigest()
 
+def get_file(file_name: str) -> bytes:
+    """!@brief Get a file from a bucket"""
+    with open(f".data/{file_name}", 'rb') as f:
+        return f.read()
+
 async def store_file(meta: UploadFile) -> str:
     """!@brief Upload a file to a bucket"""
     extension = meta.filename.split('.')[-1]
