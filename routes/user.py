@@ -4,8 +4,9 @@ from fastapi import Response, status, APIRouter, Depends
 from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user, insert_session
 from utils.updates import update_user
+from utils.retrieval import fetch_user
 from utils.utils import store_file
-from models.user import Registration, Login, UserFull
+from models.user import Registration, Login, UserFull, UserFullResponse
 
 user_router = APIRouter()
 
@@ -43,3 +44,7 @@ async def update(response: Response, user: UserFull = Depends(UserFull.as_form))
         Path(f".data/{user.image}").unlink(missing_ok=True)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"message": "User not updated"}
+
+@user_router.get("/get-user/{email}", response_model=UserFullResponse)
+async def get_user(email: str):
+    return await fetch_user(email)
