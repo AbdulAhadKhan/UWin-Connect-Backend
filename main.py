@@ -4,10 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routes.posts import post_router
 from routes.user import user_router
+from routes.media import media_router
 
 app = FastAPI()
 app.include_router(user_router)
 app.include_router(post_router)
+app.include_router(media_router)
 
 
 origins = [
