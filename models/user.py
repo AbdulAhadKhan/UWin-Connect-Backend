@@ -31,3 +31,6 @@ class UserFull(UserMin):
     role: Union[Role, None] = None
     description: Union[str, None] = None
     image: Union[UploadFile, None] = None
+
+class UserFullResponse(UserFull):
+    image: str
