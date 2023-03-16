@@ -12,3 +12,8 @@ class PostsModel(BaseModel):
     timestamp: datetime
     # image: UploadFile = File(...)
     comments: Optional[List[Tuple[str,datetime]]]
+
+
+class FetchPostsModel(BaseModel):
+    userid: str
+    last_time: str
