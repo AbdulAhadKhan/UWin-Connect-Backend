@@ -33,4 +33,4 @@ class UserFull(UserMin):
     image: Union[UploadFile, None] = None
 
 class UserFullResponse(UserFull):
-    image: str
+    image: Union[str, None] = None
