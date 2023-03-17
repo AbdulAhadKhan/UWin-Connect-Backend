@@ -1,9 +1,12 @@
 from datetime import datetime
 from pydantic import BaseModel
 from pydantic.fields import Optional
-from typing import List, Tuple
+from typing import List
 
 
+class Comment(BaseModel):
+    author: str
+    text: str
 
 class PostsModel(BaseModel):
     userid: str
@@ -11,9 +14,12 @@ class PostsModel(BaseModel):
     description: str
     timestamp: datetime
     # image: UploadFile = File(...)
-    comments: Optional[List[Tuple[str,datetime]]]
+    comment: Optional[List[Comment]] = None
 
 
 class FetchPostsModel(BaseModel):
     userid: str
     last_time: str
+
+
+
