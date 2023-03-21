@@ -10,14 +10,14 @@ from models.user import Registration, Login, UserFull, UserFullResponse
 
 user_router = APIRouter()
 
-@user_router.post("/register", status_code=201, responses={201: {"message": "User created successfully"},
-                                                           422: {"message": "Email already exists"}})
+@user_router.post("/signup", status_code=201, responses={201: {"description": "User created successfully"},
+                                                         409: {"description": "Email already exists"}})
 async def register(user_info: Registration, response: Response):
     """Register a new user"""
 
     # Check if email already exists
     if email_exists(user_info.email):
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        response.status_code = status.HTTP_409_CONFLICT
         return {"message": "Email already exists"}
     
     # Insert user into database
@@ -25,8 +25,8 @@ async def register(user_info: Registration, response: Response):
     response.status_code = status.HTTP_201_CREATED
     return {"message": "User created successfully"}
 
-@user_router.post("/login", status_code=200, responses={200: {"message": "Login successful"},
-                                                        401: {"message": "Invalid credentials"}})
+@user_router.post("/login", status_code=200, responses={200: {"description": "Login successful"},
+                                                        401: {"description": "Invalid credentials"}})
 async def login(user: Login, response: Response):
     if email_exists(user.email) and verify_password(user.email, user.password):
         session_id = insert_session(user.email, user.meta)
@@ -34,7 +34,7 @@ async def login(user: Login, response: Response):
     response.status_code = status.HTTP_401_UNAUTHORIZED
     return {"message": "Invalid credentials"}
 
-@user_router.put("/update-user", status_code=200, responses={200: {"message": "User updated successfully"}})
+@user_router.put("/update-user", status_code=200, responses={200: {"description": "User updated successfully"}})
 async def update(response: Response, user: UserFull = Depends(UserFull.as_form)):
     try:
         user.image = await store_file(user.image)
