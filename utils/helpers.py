@@ -4,6 +4,8 @@ from typing import Type
 
 from fastapi import Form
 from pydantic import BaseModel
+from bson import ObjectId
+from bson.errors import InvalidId
 
 '''
 The following code is taken from https://stackoverflow.com/questions/60127234/how-to-use-a-pydantic-model-with-form-data-in-fastapi
@@ -29,3 +31,16 @@ def form(cls: Type[BaseModel]):
     setattr(cls, 'as_form', as_form)
 
     return cls
+
+
+class ObjectID(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        try:
+            return ObjectId(str(v))
+        except InvalidId:
+            raise ValueError("Not a valid ObjectId")

@@ -1,8 +1,9 @@
 from fastapi import UploadFile
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, BaseConfig
 from typing import Union
+from bson import ObjectId
 
-from utils.helpers import form
+from utils.helpers import form, ObjectID
 from models.session import NewSession
 
 class Login(BaseModel):
@@ -21,6 +22,9 @@ class UserMin(BaseModel):
     lastname: str
     role: Role
 
+class UserMinResponse(UserMin):
+    id: str
+
 class Registration(UserMin):
     password: str
     gender: str
@@ -33,4 +37,11 @@ class UserFull(UserMin):
     image: Union[UploadFile, None] = None
 
 class UserFullResponse(UserFull):
+    class Config(BaseConfig):
+        allow_population_by_field_name = True
+        json_encoders = {
+            ObjectId: str
+        }
+    
+    id: ObjectID = Field(..., alias="_id")
     image: Union[str, None] = None
