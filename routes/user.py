@@ -1,5 +1,6 @@
 from pathlib import Path
-from fastapi import Response, status, APIRouter, Depends
+from typing import Union
+from fastapi import Response, status, APIRouter, Depends, HTTPException
 
 from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user, insert_session
@@ -45,6 +46,11 @@ async def update(response: Response, user: UserFull = Depends(UserFull.as_form))
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"message": "User not updated"}
 
-@user_router.get("/get-user/{email}", response_model=UserFullResponse)
+@user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200, 
+                 responses={200: {"description": "User retrieved successfully"},
+                            404: {"description": "User not found"}})
 async def get_user(email: str):
-    return await fetch_user(email)
+    user = await fetch_user(email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
