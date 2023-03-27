@@ -1,6 +1,8 @@
+import sys
+
 from pathlib import Path
 from typing import Union
-from fastapi import Response, status, APIRouter, Depends, HTTPException
+from fastapi import Response, status, APIRouter, Depends, HTTPException, UploadFile
 
 from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user, insert_session
@@ -54,3 +56,20 @@ async def get_user(email: str):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@user_router.put("/upload-profile-picture/{email}", status_code=200, responses={200: {"description": "Profile picture set successfully"}})
+async def set_profile_picture(response: Response, image: UploadFile, email: str):
+    try:
+        user = await fetch_user(email)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        user['image'] = await store_file(image)
+        await update_user(user)
+        print("Image set successfully")
+        return {"message": "Profile picture set successfully",
+                "image": user['image']}
+    except Exception:
+        Path(f".data/{user['image']}").unlink(missing_ok=True)
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        print(sys.exc_info())
+        return {"message": "Profile picture not set"}
