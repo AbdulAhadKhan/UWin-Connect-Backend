@@ -20,7 +20,7 @@ async def register(user_info: Registration, response: Response):
     if email_exists(user_info.email):
         response.status_code = status.HTTP_409_CONFLICT
         return {"message": "Email already exists"}
-    
+
     # Insert user into database
     insert_user(user_info)
     response.status_code = status.HTTP_201_CREATED
@@ -54,3 +54,9 @@ async def get_user(email: str):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+
+
+
+
+
