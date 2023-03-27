@@ -13,6 +13,7 @@ from models.user import Registration, Login, UserFull, UserFullResponse
 
 user_router = APIRouter()
 
+
 @user_router.post("/signup", status_code=201, responses={201: {"description": "User created successfully"},
                                                          409: {"description": "Email already exists"}})
 async def register(user_info: Registration, response: Response):
@@ -22,11 +23,12 @@ async def register(user_info: Registration, response: Response):
     if email_exists(user_info.email):
         response.status_code = status.HTTP_409_CONFLICT
         return {"message": "Email already exists"}
-    
+
     # Insert user into database
     insert_user(user_info)
     response.status_code = status.HTTP_201_CREATED
     return {"message": "User created successfully"}
+
 
 @user_router.post("/login", status_code=200, responses={200: {"description": "Login successful"},
                                                         401: {"description": "Invalid credentials"}})
@@ -36,6 +38,7 @@ async def login(user: Login, response: Response):
         return {"message": "Login successful", "session_id": session_id}
     response.status_code = status.HTTP_401_UNAUTHORIZED
     return {"message": "Invalid credentials"}
+
 
 @user_router.put("/update-user", status_code=200, responses={200: {"description": "User updated successfully"}})
 async def update(response: Response, user: UserFull = Depends(UserFull.as_form)):
@@ -48,7 +51,8 @@ async def update(response: Response, user: UserFull = Depends(UserFull.as_form))
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"message": "User not updated"}
 
-@user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200, 
+
+@user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200,
                  responses={200: {"description": "User retrieved successfully"},
                             404: {"description": "User not found"}})
 async def get_user(email: str):
@@ -56,6 +60,7 @@ async def get_user(email: str):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
 
 @user_router.put("/upload-profile-picture/{email}", status_code=200, responses={200: {"description": "Profile picture set successfully"}})
 async def set_profile_picture(response: Response, image: UploadFile, email: str):

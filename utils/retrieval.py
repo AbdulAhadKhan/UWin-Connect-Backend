@@ -13,6 +13,8 @@ async def fetch_user(name: str) -> dict:
     collection = get_collection("users")
     return collection.find_one({"email": name}, {"password": 0})
 
+
+
 async def getother_posts(user_id: str, last_time: str):
     last_time = datetime.strptime(last_time, "%Y%m%d")
     print(last_time)
