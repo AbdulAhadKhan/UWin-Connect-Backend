@@ -9,7 +9,7 @@ from utils.insertions import insert_user, insert_session
 from utils.updates import update_user
 from utils.retrieval import fetch_user
 from utils.utils import store_file
-from models.user import Registration, Login, UserFull, UserFullResponse
+from models.user import Registration, Login, UserUpdate, UserFullResponse
 
 user_router = APIRouter()
 
@@ -40,21 +40,20 @@ async def login(user: Login, response: Response):
     return {"message": "Invalid credentials"}
 
 
-@user_router.put("/update-user", status_code=200, responses={200: {"description": "User updated successfully"}})
-async def update(response: Response, user: UserFull = Depends(UserFull.as_form)):
+@user_router.put("/update-user/{email}", status_code=200, responses={200: {"description": "User updated successfully"}})
+async def update(response: Response, data: UserUpdate, email: str):
     try:
-        user.image = await store_file(user.image)
-        await update_user(user)
+        await update_user(email, data)
         return {"message": "User updated successfully"}
     except Exception:
-        Path(f".data/{user.image}").unlink(missing_ok=True)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        print(sys.exc_info())
         return {"message": "User not updated"}
 
 
-@user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200,
-                 responses={200: {"description": "User retrieved successfully"},
-                            404: {"description": "User not found"}})
+@ user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200,
+                  responses={200: {"description": "User retrieved successfully"},
+                             404: {"description": "User not found"}})
 async def get_user(email: str):
     user = await fetch_user(email)
     if not user:
@@ -62,7 +61,7 @@ async def get_user(email: str):
     return user
 
 
-@user_router.put("/upload-profile-picture/{email}", status_code=200, responses={200: {"description": "Profile picture set successfully"}})
+@ user_router.put("/upload-profile-picture/{email}", status_code=200, responses={200: {"description": "Profile picture set successfully"}})
 async def set_profile_picture(response: Response, image: UploadFile, email: str):
     try:
         user = await fetch_user(email)
