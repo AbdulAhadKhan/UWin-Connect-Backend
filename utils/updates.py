@@ -1,9 +1,12 @@
 from utils.utils import get_collection, clean_dict
 
-async def update_user(user_info):
+
+async def update_user(email, data):
     """!@brief Update a user in the database"""
     collection = get_collection('users')
-    user_info = clean_dict(dict(user_info))
+    data = clean_dict(dict(data))
 
-    document = collection.update_one({"email": user_info['email']}, {"$set": user_info})
-    if document.matched_count == 0: raise Exception("User not updated")
+    document = collection.update_one(
+        {"email": email}, {"$set": data})
+    if document.matched_count == 0:
+        raise Exception("User not updated")
