@@ -9,6 +9,7 @@ from utils.insertions import insert_user, insert_session
 from utils.updates import update_user
 from utils.retrieval import fetch_user
 from utils.utils import store_file
+from utils.search import search_users
 from models.user import Registration, Login, UserUpdate, UserFullResponse
 
 user_router = APIRouter()
@@ -51,9 +52,9 @@ async def update(response: Response, data: UserUpdate, email: str):
         return {"message": "User not updated"}
 
 
-@ user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200,
-                  responses={200: {"description": "User retrieved successfully"},
-                             404: {"description": "User not found"}})
+@user_router.get("/get-user/{email}", response_model=Union[UserFullResponse, None], status_code=200,
+                 responses={200: {"description": "User retrieved successfully"},
+                            404: {"description": "User not found"}})
 async def get_user(email: str):
     user = await fetch_user(email)
     if not user:
@@ -61,7 +62,7 @@ async def get_user(email: str):
     return user
 
 
-@ user_router.put("/upload-profile-picture/{email}", status_code=200, responses={200: {"description": "Profile picture set successfully"}})
+@user_router.put("/upload-profile-picture/{email}", status_code=200, responses={200: {"description": "Profile picture set successfully"}})
 async def set_profile_picture(response: Response, image: UploadFile, email: str):
     try:
         user = await fetch_user(email)
@@ -77,3 +78,9 @@ async def set_profile_picture(response: Response, image: UploadFile, email: str)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         print(sys.exc_info())
         return {"message": "Profile picture not set"}
+
+
+@user_router.get("/query-users/{query}", status_code=200, responses={200: {"description": "Users retrieved successfully"}})
+async def query_users(query: str):
+    users = await search_users(query)
+    return users
