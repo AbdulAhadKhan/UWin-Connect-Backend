@@ -68,7 +68,7 @@ async def set_profile_picture(response: Response, image: UploadFile, email: str)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         user['image'] = await store_file(image)
-        await update_user(user)
+        await update_user(email, user)
         print("Image set successfully")
         return {"message": "Profile picture set successfully",
                 "image": user['image']}

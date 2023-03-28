@@ -56,3 +56,4 @@ class UserUpdate(BaseModel):
     firstname: str
     lastname: str
     description: Union[str, None] = None
+    image: Union[str, None] = None
