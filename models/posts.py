@@ -14,12 +14,9 @@ class Comment(BaseModel):
 
 @form
 class PostsModel(BaseModel):
-    userid: str
-    title: str
+    email: str
     description: str
-    timestamp: datetime
-    # image: UploadFile = File(...)
-    comment: Union[List[Comment], None] = None
+    timestamp: int
     image: Union[UploadFile, None] = None
 
 
