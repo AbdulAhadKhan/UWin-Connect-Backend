@@ -1,5 +1,5 @@
 from pathlib import Path
-from fastapi import APIRouter, Form, Depends
+from fastapi import APIRouter, Depends
 
 from models.posts import PostsModel, FetchPostsModel
 from routes.user import get_user
