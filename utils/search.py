@@ -14,24 +14,24 @@ async def search_users(query: str):
                             "autocomplete": {
                                 "query": query,
                                 "path": "firstname",
-                                "tokenOrder": "any",
-                                "fuzzy": {}
+                                "tokenOrder": "sequential",
+                                "fuzzy": {},
                             }
                         },
                         {
                             "autocomplete": {
                                 "query": query,
                                 "path": "lastname",
-                                "tokenOrder": "any",
-                                "fuzzy": {}
+                                "tokenOrder": "sequential",
+                                "fuzzy": {},
                             }
                         },
                         {
                             "autocomplete": {
                                 "query": query,
                                 "path": "email",
-                                "tokenOrder": "any",
-                                "fuzzy": {}
+                                "tokenOrder": "sequential",
+                                "fuzzy": {},
                             }
                         }
                     ]
