@@ -12,15 +12,24 @@ class Comment(BaseModel):
     text: str
 
 
+# @form
+# class PostsModel(BaseModel):
+#     userid: str
+#     title: str
+#     description: str
+#     timestamp: datetime
+#     # image: UploadFile = File(...)
+#     comment: Union[List[Comment], None] = None
+#     image: Union[UploadFile, None] = None
+
 @form
 class PostsModel(BaseModel):
     userid: str
     title: str
     description: str
-    timestamp: datetime
-    # image: UploadFile = File(...)
+    timestamp: int
     comment: Union[List[Comment], None] = None
-    image: Union[UploadFile, None] = None
+    image: Union[bytes, None] = None
 
 
 class FetchPostsModel(BaseModel):
