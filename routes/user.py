@@ -90,4 +90,4 @@ async def are_friends(email: str, friends_email: str):
     user2 = await fetch_user(friends_email)
     if not user1 or not user2:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"are_friends": await check_if_friends(email, friends_email)}
+    return {"are_friends": check_if_friends(email, friends_email)}

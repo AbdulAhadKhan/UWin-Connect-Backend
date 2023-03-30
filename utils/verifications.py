@@ -14,13 +14,14 @@ def verify_password(email, password) -> bool:
     return compare_hashed_password(password, hashed_password)
 
 
-async def check_if_friends(email, friends_email):
+def check_if_friends(email, friends_email):
     """!@brief Check if two users are friends"""
     collection = get_collection("users")
-    cursor = collection.aggregate([
+
+    status = collection.aggregate([
         {
             '$match': {
-                'email': email,
+                'email': 'abdulahadkhan@uwindsor.ca',
                 'friends': {
                     '$exists': True
                 }
@@ -29,13 +30,12 @@ async def check_if_friends(email, friends_email):
             '$project': {
                 'areFriends': {
                     '$in': [
-                        friends_email, '$friends'
+                        'jamesbond@uwindsor.ca', '$friends'
                     ]
                 },
                 '_id': 0
             }
         }
-    ])
+    ]).next().get('areFriends')
 
-    cursor = list(cursor)
-    return False if len(cursor) == 0 else cursor[0]['areFriends']
+    return status
