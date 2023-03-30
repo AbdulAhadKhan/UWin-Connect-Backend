@@ -1,6 +1,5 @@
 import sys
 
-from pathlib import Path
 from typing import Union
 from fastapi import Response, status, APIRouter, Depends, HTTPException, UploadFile
 
@@ -73,7 +72,6 @@ async def set_profile_picture(response: Response, image: UploadFile, email: str)
         return {"message": "Profile picture set successfully",
                 "image": user['image']}
     except Exception:
-        delete_file(user['image'])
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"message": "Profile picture not set"}
 
