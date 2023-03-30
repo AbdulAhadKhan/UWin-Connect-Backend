@@ -15,27 +15,16 @@ def verify_password(email, password) -> bool:
 
 
 def check_if_friends(email, friends_email):
+    print(email, friends_email)
     """!@brief Check if two users are friends"""
     collection = get_collection("users")
 
-    status = collection.aggregate([
-        {
-            '$match': {
-                'email': 'abdulahadkhan@uwindsor.ca',
-                'friends': {
-                    '$exists': True
-                }
-            }
-        }, {
-            '$project': {
-                'areFriends': {
-                    '$in': [
-                        'jamesbond@uwindsor.ca', '$friends'
-                    ]
-                },
-                '_id': 0
-            }
+    status = collection.find_one({
+        "email": email,
+        "friends": {
+            "$exists": True,
+            "$in": [friends_email]
         }
-    ]).next().get('areFriends')
+    })
 
-    return status
+    return status is not None

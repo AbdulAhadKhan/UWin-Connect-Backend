@@ -86,8 +86,4 @@ async def query_users(query: str):
 @user_router.get("/friendship-status",
                  status_code=200, responses={200: {"description": "Friendship status retrieved successfully"}})
 async def are_friends(email: str, friends_email: str):
-    user1 = await fetch_user(email)
-    user2 = await fetch_user(friends_email)
-    if not user1 or not user2:
-        raise HTTPException(status_code=404, detail="User not found")
     return {"are_friends": check_if_friends(email, friends_email)}

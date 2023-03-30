@@ -1,3 +1,5 @@
+import uvicorn
+
 from utils.retrieval import fetch_n_posts_by_user_le_time
 from fastapi import Request
 from fastapi import FastAPI
@@ -31,3 +33,7 @@ app.add_middleware(
 async def echo(request: Request):
     """Echo the request body as JSON"""
     return await request.json()
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
