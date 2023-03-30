@@ -27,7 +27,7 @@ async def fetch_n_posts_by_user_le_time(email: str, next_timestamp: str, page_si
                 "_id": {
                     "$toString": "$_id"
                 },
-                "userid": 1,
+                "email": 1,
                 "description": 1,
                 "timestamp": 1,
                 "image": 1
@@ -36,10 +36,8 @@ async def fetch_n_posts_by_user_le_time(email: str, next_timestamp: str, page_si
     ])
     posts = list(result)
     last_timestamp = posts[-1]["timestamp"] if posts else None
-    has_next = True if collection.find_one(
-        {"email": email, "timestamp": {"$gt": last_timestamp}}) else False
 
-    return posts, has_next, last_timestamp
+    return posts, last_timestamp
 
 
 async def fetch_user(name: str) -> dict:

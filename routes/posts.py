@@ -1,3 +1,5 @@
+import sys
+
 from pathlib import Path
 from fastapi import APIRouter, Depends
 
@@ -27,8 +29,9 @@ async def new_post(post: PostsModel = Depends(PostsModel.as_form)):
 @post_router.get("/get-posts/{email}", status_code=200)
 async def get_posts(email: str, next_timestamp: int = 0, page_size: int = 10):
     try:
-        posts, has_next, last_timestamp = await fetch_n_posts_by_user_le_time(
+        posts, last_timestamp = await fetch_n_posts_by_user_le_time(
             email, next_timestamp, page_size)
-        return {"posts": posts, "next": last_timestamp, "has_next": has_next}
+        return {"posts": posts, "next": {"page": last_timestamp} if last_timestamp else None}
     except Exception:
+        print(sys.exc_info())
         return {"message": "Posts not retrieved"}

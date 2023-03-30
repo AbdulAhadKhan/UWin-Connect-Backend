@@ -1,4 +1,4 @@
-atlas_uri: mongodb+srv://UWinConnect-Backend:pOhjth3elH06kG5O@uwinuseast.86ldfsv.mongodb.net/?retryWrites=true&w=majority
-db: DEV
+atlas_uri: mongodb+srv://Experimental:0ksnmQj15YqZD5DI@uwinuseast.86ldfsv.mongodb.net/?retryWrites=true&w=majority
+db: Experimental
 bucket: uwin-connect-media-storage
 collections: { users: USERS, sessions: USER_SESSIONS, posts: POSTS }
