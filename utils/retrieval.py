@@ -7,30 +7,28 @@ async def fetch_n_posts_by_user_le_time(email: str, next_timestamp: str, page_si
     collection = get_collection("posts")
     result = collection.aggregate([
         {
-            "$sort": {
-                "timestamp": 1
+            '$sort': {
+                'timestamp': -1
             }
-        },
-        {
-            "$match": {
-                "email": email,
-                "timestamp": {
-                    "$gt": next_timestamp
+        }, {
+            '$match': {
+                'email': email,
+                'timestamp': {
+                    '$lt': next_timestamp
                 }
             }
-        },
-        {
-            "$limit": page_size
-        },
-        {
-            "$project": {
-                "_id": {
-                    "$toString": "$_id"
+        }, {
+            '$limit': page_size
+        }, {
+            '$project': {
+                'id': {
+                    '$toString': '$_id'
                 },
-                "email": 1,
-                "description": 1,
-                "timestamp": 1,
-                "image": 1
+                'email': 1,
+                'description': 1,
+                'timestamp': 1,
+                'image': 1,
+                '_id': 0
             }
         }
     ])
