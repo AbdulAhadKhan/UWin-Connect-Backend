@@ -1,7 +1,4 @@
 atlas_uri: mongodb+srv://UWinConnect-Backend:pOhjth3elH06kG5O@uwinuseast.86ldfsv.mongodb.net/?retryWrites=true&w=majority
 db: DEV
-collections: {
-  users: USERS,
-  sessions: USER_SESSIONS,
-  posts: POSTS
-}
+bucket: uwin-connect-media-storage
+collections: { users: USERS, sessions: USER_SESSIONS, posts: POSTS }
