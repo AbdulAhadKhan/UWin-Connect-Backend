@@ -27,7 +27,7 @@ async def new_post(post: PostsModel = Depends(PostsModel.as_form)):
 
 
 @post_router.get("/get-posts/{email}", status_code=200)
-async def get_posts(email: str, next_timestamp: int = 0, page_size: int = 10):
+async def get_posts(email: str, next_timestamp: int, page_size: int = 10):
     try:
         posts, last_timestamp = await fetch_n_posts_by_user_le_time(
             email, next_timestamp, page_size)
