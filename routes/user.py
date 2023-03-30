@@ -5,9 +5,9 @@ from fastapi import Response, status, APIRouter, Depends, HTTPException, UploadF
 
 from utils.verifications import email_exists, verify_password, check_if_friends
 from utils.insertions import insert_user, insert_session
-from utils.updates import update_user
+from utils.updates import update_user, push_friend, pop_friend
 from utils.retrieval import fetch_user
-from utils.utils import store_file, delete_file
+from utils.utils import store_file
 from utils.search import search_users
 from models.user import Registration, Login, UserUpdate, UserFullResponse
 
@@ -82,8 +82,27 @@ async def query_users(query: str):
     return users
 
 
-# find if two users are friends
 @user_router.get("/friendship-status",
                  status_code=200, responses={200: {"description": "Friendship status retrieved successfully"}})
 async def are_friends(email: str, friends_email: str):
     return {"are_friends": check_if_friends(email, friends_email)}
+
+
+@user_router.get("/add-friend", status_code=200, responses={200: {"description": "Friend added successfully"}})
+async def add_friend(email: str, friends_email: str):
+    try:
+        push_friend(email, friends_email)
+        return {"message": "Friend added successfully"}
+    except Exception:
+        print(sys.exc_info())
+        return {"message": "Friend not added"}
+
+
+@user_router.get("/remove-friend", status_code=200, responses={200: {"description": "Friend removed successfully"}})
+async def remove_friend(email: str, friends_email: str):
+    try:
+        pop_friend(email, friends_email)
+        return {"message": "Friend removed successfully"}
+    except Exception:
+        print(sys.exc_info())
+        return {"message": "Friend not removed"}
