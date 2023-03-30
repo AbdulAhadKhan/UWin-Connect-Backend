@@ -2,7 +2,6 @@ import io
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response
 from utils.utils import get_file
-import boto3
 
 media_router = APIRouter()
 

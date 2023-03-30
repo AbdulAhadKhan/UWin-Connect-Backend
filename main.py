@@ -1,3 +1,4 @@
+from utils.retrieval import fetch_n_posts_by_user_le_time
 from fastapi import Request
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,6 +25,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/echo")
 async def echo(request: Request):
