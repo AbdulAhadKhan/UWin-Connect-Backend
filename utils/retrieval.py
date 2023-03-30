@@ -8,7 +8,7 @@ async def fetch_n_posts_by_user_le_time(email: str, next_timestamp: str, page_si
     result = collection.aggregate([
         {
             "$sort": {
-                "timestamp": 1
+                "timestamp": -1
             }
         },
         {
