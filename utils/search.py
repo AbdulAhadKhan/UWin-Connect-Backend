@@ -7,7 +7,7 @@ async def search_users(query: str):
     cursor = collection.aggregate([
         {
             "$search": {
-                "index": "search_user",
+                "index": "search_index",
                 "compound": {
                     "should": [
                         {

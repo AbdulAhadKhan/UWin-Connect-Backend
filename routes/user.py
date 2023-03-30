@@ -8,7 +8,7 @@ from utils.verifications import email_exists, verify_password
 from utils.insertions import insert_user, insert_session
 from utils.updates import update_user
 from utils.retrieval import fetch_user
-from utils.utils import store_file
+from utils.utils import store_file, delete_file
 from utils.search import search_users
 from models.user import Registration, Login, UserUpdate, UserFullResponse
 
@@ -73,7 +73,7 @@ async def set_profile_picture(response: Response, image: UploadFile, email: str)
         return {"message": "Profile picture set successfully",
                 "image": user['image']}
     except Exception:
-        Path(f".data/{user['image']}").unlink(missing_ok=True)
+        delete_file(user['image'])
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"message": "Profile picture not set"}
 
