@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Form, Depends,Request
+from fastapi import APIRouter, Form, Depends, Request, Body
 from starlette.datastructures import FormData
-from models.posts import PostsModel, FetchPostsModel
-from utils.insertions import insert_post
+from models.posts import PostsModel, FetchPostsModel, Comment
+from utils.insertions import insert_post, insert_comment
 from utils.retrieval import fetch_posts, getother_posts
 
 post_router = APIRouter()
@@ -28,16 +28,21 @@ async def new_post(request: Request):
     return {"insertion": insert_post(post)}
 
 
+@post_router.post("/newcomment/{id_val}", status_code=201)
+async def new_comment(comment: Comment, id_val: str):
+    print("debug", str(comment))
+    return {"inserted comment": insert_comment(id_val, comment)}
+
 
 @post_router.get("/fetchposts/{name}")
 async def retrieve_posts(name: str):
-    posts = fetch_posts(name)
+    posts = await fetch_posts(name)
     posts = str(posts)
     return posts
 
 
 @post_router.post("/getotherposts/")
-async def retrieve_other_posts(fetchpostsmodel:FetchPostsModel):
+async def retrieve_other_posts(fetchpostsmodel: FetchPostsModel):
     posts = await getother_posts(fetchpostsmodel.userid, fetchpostsmodel.last_time)
     posts = str(posts)
     return posts

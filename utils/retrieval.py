@@ -15,8 +15,8 @@ async def fetch_user(name: str) -> dict:
 
 
 
-async def getother_posts(user_id: str, last_time: str):
-    last_time = datetime.strptime(last_time, "%Y%m%d")
+async def getother_posts(user_id: str, last_time: int):
+    # last_time = datetime.strptime(last_time, "%Y%m%d")
     print(last_time)
     collection = get_collection("posts")
     cursor = collection.find({"userid": {"$ne": user_id}, 

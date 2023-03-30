@@ -1,3 +1,6 @@
+from bson import ObjectId
+
+
 from utils.utils import get_collection, hash_password
 from utils.utils import generate_session_id
 
@@ -26,3 +29,14 @@ def insert_post(post_info):
     collection = get_collection("posts")
     result = collection.insert_one(post_info.dict())
     return result.acknowledged
+
+
+def insert_comment(id_val: str, comment):
+    post_query = {'_id': ObjectId(id_val)}
+    new_value = {'$push': {'comments': comment.dict(by_alias=True, exclude_unset=True)}}
+    collection = get_collection("posts")
+    result = collection.update_one(post_query, new_value)
+    return result.modified_count
+
+
+

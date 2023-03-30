@@ -34,4 +34,4 @@ class PostsModel(BaseModel):
 
 class FetchPostsModel(BaseModel):
     userid: str
-    last_time: str
+    last_time: int
