@@ -6,7 +6,7 @@ from fastapi import Response, status, APIRouter, Depends, HTTPException, UploadF
 from utils.verifications import email_exists, verify_password, check_if_friends
 from utils.insertions import insert_user, insert_session
 from utils.updates import update_user, push_friend, pop_friend
-from utils.retrieval import fetch_user
+from utils.retrieval import fetch_user, get_user_minimal_info
 from utils.utils import store_file
 from utils.search import search_users
 from models.user import Registration, Login, UserUpdate, UserFullResponse
@@ -80,6 +80,12 @@ async def set_profile_picture(response: Response, image: UploadFile, email: str)
 async def query_users(query: str):
     users = await search_users(query)
     return users
+
+
+@user_router.get("/get-user-minimal-info/{email}", status_code=200, responses={200: {"description": "User retrieved successfully"}})
+async def get_minimal_user(email: str):
+    user = await get_user_minimal_info(email)
+    return user
 
 
 @user_router.get("/friendship-status",

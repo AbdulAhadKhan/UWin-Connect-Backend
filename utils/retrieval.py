@@ -42,6 +42,11 @@ async def fetch_user(name: str) -> dict:
     return collection.find_one({"email": name}, {"password": 0})
 
 
+async def get_user_minimal_info(email: str) -> dict:
+    collection = get_collection("users")
+    return collection.find_one({"email": email}, {"firstname": 1, "lastname": 1, "image": 1, "_id": 0})
+
+
 async def fetch_n_posts_by_friends(email, next_timestamp, page_size):
     collection = get_collection("users")
     friends = collection.find_one({"email": email}, {"friends": 1, "_id": 0})

@@ -50,3 +50,13 @@ def pop_like(email, post_id):
         "$pull": {"likes": email}})
     if document.matched_count == 0:
         raise Exception("Like not removed")
+
+
+def push_comment(email, post_id, comment, timestamp):
+    """!@brief Add a comment to a post"""
+    collection = get_collection("posts")
+    post_id = ObjectId(post_id)
+    document = collection.update_one({"_id": post_id}, {
+        "$put": {"comments": {"email": email, "comment": comment, "timestamp": timestamp}}})
+    if document.matched_count == 0:
+        raise Exception("Comment not added")
