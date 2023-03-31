@@ -28,6 +28,7 @@ async def fetch_n_posts_by_user_le_time(email: str, next_timestamp: str, page_si
                 'image': 1,
                 '_id': 0,
                 'likes': 1,
+                'comments': 1,
             }
         }
     ])
@@ -81,6 +82,7 @@ async def fetch_n_posts_by_friends(email, next_timestamp, page_size):
                 'image': 1,
                 '_id': 0,
                 'likes': 1,
+                'comments': 1,
             }
         }
     ])
