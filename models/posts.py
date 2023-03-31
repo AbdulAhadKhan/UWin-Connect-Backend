@@ -20,6 +20,13 @@ class PostsModel(BaseModel):
     image: Union[UploadFile, None] = None
 
 
+@form
+class CommentModel(BaseModel):
+    email: str
+    comment: str
+    timestamp: int
+
+
 class FetchPostsModel(BaseModel):
     last_timestamp: int
     page_size: int

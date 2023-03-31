@@ -1,14 +1,14 @@
 import sys
 
 from pathlib import Path
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
-from models.posts import PostsModel
+from models.posts import PostsModel, CommentModel
 from routes.user import get_user
 from utils.utils import store_file
 from utils.insertions import insert_post
 from utils.retrieval import fetch_n_posts_by_user_le_time, fetch_n_posts_by_friends
-from utils.updates import push_like, pop_like
+from utils.updates import push_like, pop_like, push_comment
 
 post_router = APIRouter()
 
@@ -67,3 +67,14 @@ async def unlike_post(email: str, post_id: str):
     except Exception:
         print(sys.exc_info())
         return {"message": "Post not unliked"}
+
+
+@post_router.post("/comment-post/{post_id}", status_code=200)
+async def comment_post(post_id: str, comment: CommentModel = Depends(CommentModel.as_form)):
+    try:
+        push_comment(comment.email, post_id,
+                     comment.comment, comment.timestamp)
+        return {"message": "Post commented successfully"}
+    except Exception:
+        print(sys.exc_info())
+        return {"message": "Post not commented"}

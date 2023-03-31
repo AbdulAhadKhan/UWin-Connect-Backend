@@ -57,6 +57,6 @@ def push_comment(email, post_id, comment, timestamp):
     collection = get_collection("posts")
     post_id = ObjectId(post_id)
     document = collection.update_one({"_id": post_id}, {
-        "$put": {"comments": {"email": email, "comment": comment, "timestamp": timestamp}}})
+        "$push": {"comments": {"email": email, "comment": comment, "timestamp": timestamp}}})
     if document.matched_count == 0:
         raise Exception("Comment not added")
