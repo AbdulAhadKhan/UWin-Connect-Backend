@@ -8,6 +8,7 @@ from routes.user import get_user
 from utils.utils import store_file
 from utils.insertions import insert_post
 from utils.retrieval import fetch_n_posts_by_user_le_time, fetch_n_posts_by_friends
+from utils.updates import push_like
 
 post_router = APIRouter()
 
@@ -46,3 +47,13 @@ async def get_friends_posts(email: str, next_timestamp: int, page_size: int = 10
     except Exception:
         print(sys.exc_info())
         return {"message": "Posts not retrieved"}
+
+
+@post_router.put("/like-post/{post_id}", status_code=200)
+async def like_post(email: str, post_id: str):
+    try:
+        push_like(email, post_id)
+        return {"message": "Post liked successfully"}
+    except Exception:
+        print(sys.exc_info())
+        return {"message": "Post not liked"}

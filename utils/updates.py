@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from utils.utils import get_collection, clean_dict
 
 
@@ -28,3 +30,13 @@ def pop_friend(email, friend_email):
         "$pull": {"friends": friend_email}})
     if document.matched_count == 0:
         raise Exception("Friend not removed")
+
+
+def push_like(email, post_id):
+    """!@brief Add a like to a post"""
+    collection = get_collection("posts")
+    post_id = ObjectId(post_id)
+    document = collection.update_one({"_id": post_id}, {
+        "$addToSet": {"likes": email}})
+    if document.matched_count == 0:
+        raise Exception("Like not added")
