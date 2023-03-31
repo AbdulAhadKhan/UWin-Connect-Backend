@@ -8,7 +8,7 @@ from routes.user import get_user
 from utils.utils import store_file
 from utils.insertions import insert_post
 from utils.retrieval import fetch_n_posts_by_user_le_time, fetch_n_posts_by_friends
-from utils.updates import push_like
+from utils.updates import push_like, pop_like
 
 post_router = APIRouter()
 
@@ -57,3 +57,13 @@ async def like_post(email: str, post_id: str):
     except Exception:
         print(sys.exc_info())
         return {"message": "Post not liked"}
+
+
+@post_router.put("/unlike-post/{post_id}", status_code=200)
+async def unlike_post(email: str, post_id: str):
+    try:
+        pop_like(email, post_id)
+        return {"message": "Post unliked successfully"}
+    except Exception:
+        print(sys.exc_info())
+        return {"message": "Post not unliked"}

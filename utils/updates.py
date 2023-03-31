@@ -40,3 +40,13 @@ def push_like(email, post_id):
         "$addToSet": {"likes": email}})
     if document.matched_count == 0:
         raise Exception("Like not added")
+
+
+def pop_like(email, post_id):
+    """!@brief Remove a like from a post"""
+    collection = get_collection("posts")
+    post_id = ObjectId(post_id)
+    document = collection.update_one({"_id": post_id}, {
+        "$pull": {"likes": email}})
+    if document.matched_count == 0:
+        raise Exception("Like not removed")
